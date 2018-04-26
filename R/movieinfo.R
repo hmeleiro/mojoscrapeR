@@ -150,6 +150,11 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
 
     ## Release date
     release.date <- x %>% read_html() %>% html_node("nobr a") %>% html_text(trim = TRUE)   ## Scrap release date and format to Date class variable
+
+    if (is.na(release.date)) {
+      release.date <- x %>% read_html() %>% html_node("nobr") %>% html_text(trim = TRUE)
+    }
+
     dates <- str_split(release.date, " |,", n = 3, simplify = TRUE)
     try(day <- dates[,2])
     try(months <- match(dates[,1], month.name))
