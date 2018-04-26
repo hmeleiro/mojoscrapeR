@@ -7,13 +7,19 @@
 #' @param to character. A date in YYYY-MM-DD format.
 #' @param ruta character. A valid path in your computer where you want to create the csv file. By default the csv named mojo will be created in the working directory.
 #' @return It returns a csv in the specified path
+#'
+#' @import stringr
+#' @import rvest
+#' @import httr
+#' @importFrom  readr write_csv
+#' @importFrom readr read_csv
+#' @import utils
+#' @import dplyr
+#' @importFrom dplyr data_frame
+#' @import xml2
+#'
 #' @export
 mojo <- function(from , to, ruta = "~/mojo.csv") {
-  require(httr)
-  require(dplyr)
-  require(rvest)
-  require(stringr)
-  require(readr)
 
   start <- Sys.time()
 

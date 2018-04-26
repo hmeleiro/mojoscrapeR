@@ -6,14 +6,19 @@
 #' @param movies character. A string of mojo box office movie ids. You can get them from the id column of a csv extract of mojo() function.
 #' @param ruta character. A valid path in your computer where you want to create the csv file. By default the csv named movieinfo will be created in the working directory.
 #' @return It returns a csv in the specified path
+#'
+#' @import stringr
+#' @import rvest
+#' @import httr
+#' @import dplyr
+#' @importFrom dplyr data_frame
+#' @importFrom  readr write_csv
+#' @importFrom readr read_csv
+#' @import utils
+#' @import xml2
+#'
 #' @export
 movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
-
-  require(httr)
-  require(dplyr)
-  require(rvest)
-  require(stringr)
-  require(readr)
 
 
   urls <- paste0("http://www.boxofficemojo.com/movies/?page=main&id=", movies, ".htm")
