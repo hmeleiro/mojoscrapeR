@@ -164,7 +164,7 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
     ## Budget
     budget <- x %>% read_html() %>% html_node("center tr:nth-child(4) td+ td b") %>% html_text(trim = TRUE)
 
-    if (budget == "N/A") {
+    if (budget == "N/A" | is.na(budget)) {
       budget <- NA
     } else if (budget != "N/A") {
       budget <- str_remove_all(budget, "\\$")
