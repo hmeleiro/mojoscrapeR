@@ -1,12 +1,11 @@
 Package: mojoscrapeR
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Scraps mojoboxoffice.com for revenue data on films.
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Héctor Meleiro <hmeleiros@gmail.com>
+Maintainer: Héctor Meleiro <hmeleiros@gmail.com>
+Description: mojoscrapeR scraps mojoboxoffice.com for revenue data on films.    You can get info on a specific time interval or on a set of movies.
+License: MIT + License file
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
