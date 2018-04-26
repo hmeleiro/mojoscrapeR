@@ -84,4 +84,8 @@ mojo <- function(from , to, ruta = "~/mojo.csv") {
     write_csv(line, append = TRUE, col_names = FALSE, path = ruta)
 
   }
+
+  stop <- Sys.time()
+  print(difftime(stop, start, units = "auto"))
+
 }

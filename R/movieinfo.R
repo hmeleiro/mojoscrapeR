@@ -20,6 +20,7 @@
 #' @export
 movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
 
+  start <- Sys.time()
 
   urls <- paste0("http://www.boxofficemojo.com/movies/?page=main&id=", movies, ".htm")
 
@@ -154,4 +155,8 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
 
     Sys.sleep(sample(1:3, 1))
   }
+
+  stop <- Sys.time()
+  print(difftime(stop, start, units = "auto"))
+
 }
