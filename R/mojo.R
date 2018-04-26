@@ -60,14 +60,18 @@ mojo <- function(from , to, ruta = "~/mojo.csv") {
 
     dailygross <- x %>% read_html() %>% html_nodes("center td font > b") %>% html_text()
     dailygross <- str_remove_all(dailygross, "\\$|,")
+    try(dailygross <- as.numeric(dailygross))
 
     gross.to.date <- x %>% read_html() %>% html_nodes("td:nth-child(10) font") %>% html_text()
     gross.to.date <- str_remove_all(gross.to.date, "\\$|,")
+    try(gross.to.date <- as.numeric(gross.to.date))
 
     theatres <- x %>% read_html() %>% html_nodes("tr+ tr td:nth-child(8) font") %>% html_text()
     theatres <- theatres[-1]
+    theatres <- str_remove_all(theatres, ",")
 
     days <- x %>% read_html() %>% html_nodes("td:nth-child(11) font") %>% html_text()
+    try(days <- as.numeric(days))
 
     date <- str_remove_all(url, "http://www.boxofficemojo.com/daily/chart/\\?view=1day&sortdate=|&p=.htm")
 
