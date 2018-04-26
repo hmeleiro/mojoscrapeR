@@ -45,43 +45,66 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
   for (url in urls) {
     x <- GET(url, add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
 
+    ## Film title
     title <- x %>% read_html() %>% html_node("br+ font b") %>% html_text(trim = TRUE)
 
+    ## Domestic gross
     domestic.gross <- x %>% read_html() %>% html_node("td td td td tr:nth-child(1) td:nth-child(2) b") %>% html_text(trim = TRUE)
     domestic.gross <- str_remove_all(domestic.gross, "\\$|,")
     try(domestic.gross <- as.numeric(domestic.gross))
+    ####
 
+
+    ## Foreign gross
     foreign.gross <- x %>% read_html() %>% html_node("td td td td:nth-child(1) tr:nth-child(2) td:nth-child(2)") %>% html_text(trim = TRUE)
     foreign.gross <- str_remove_all(foreign.gross, "\\$|,")
 
-    if (is.na(foreign.gross)) {
-      foreign.gross <- NA
-    } else if (foreign.gross == "n/a") {
+    if (foreign.gross == "n/a" | is.na(foreign.gross)) {
       foreign.gross <- NA
     }
 
     try(foreign.gross <- as.numeric(foreign.gross))
+    ####
 
+
+    ## Total gross
     total.gross <- x %>% read_html() %>% html_node("td td td td tr+ tr td+ td b") %>% html_text(trim = TRUE)
     total.gross <- str_remove_all(total.gross, "\\$|,")
-    try(total.gross <- as.numeric(total.gross))
 
-    first.weekend <- x %>% read_html() %>% html_node("td td td td .mp_box+ .mp_box table:nth-child(1) tr:nth-child(1) td+ td") %>% html_text(trim = TRUE)
-
-    if (str_detect(first.weekend, "limited") == TRUE) {
-      first.weekend <- x %>% read_html() %>% html_node("td td td td .mp_box+ .mp_box table:nth-child(2) tr:nth-child(1) td+ td") %>% html_text(trim = TRUE)
+    if (total.gross == "n/a" | is.na(total.gross)) {
+      total.gross <- NA
     }
 
-    if (str_detect(first.weekend, "\\$") == FALSE) {
+    try(total.gross <- as.numeric(total.gross))
+    ####
+
+
+    ## First weekend
+    first.weekend <- x %>% read_html() %>% html_node("td td td td .mp_box+ .mp_box table:nth-child(1) tr:nth-child(1) td+ td") %>% html_text(trim = TRUE)
+
+    if (first.weekend == "n/a" | is.na(first.weekend)) {
       first.weekend <- NA
     }
 
+    if (str_detect(first.weekend, "limited") == TRUE | is.na(first.weekend)) {
+      first.weekend <- x %>% read_html() %>% html_node("td td td td .mp_box+ .mp_box table:nth-child(2) tr:nth-child(1) td+ td") %>% html_text(trim = TRUE)
+    }
+
+    if (str_detect(first.weekend, "\\$") == FALSE | is.na(first.weekend)) {
+      first.weekend <- NA
+    }
 
     first.weekend <- str_remove_all(first.weekend, "\\$|,")
     try(first.weekend <- as.numeric(first.weekend))
+    ###
 
 
+    ## Number of theater in widest release
     widest.release <- x %>% read_html() %>% html_node(".mp_box_content table:nth-child(2) td+ td") %>% html_text(trim = TRUE)
+
+    if (widest.release == "n/a" | is.na(widest.release)) {
+      widest.release <- NA
+    }
 
     if (str_detect(widest.release, "theaters") == FALSE) {
       widest.release <- x %>% read_html() %>% html_node("table:nth-child(4) td+ td") %>% html_text(trim = TRUE)
@@ -89,9 +112,10 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
 
     widest.release <- str_remove_all(widest.release, ",|theaters")
     try(widest.release <- as.numeric(widest.release))
+    ####
 
 
-
+    ## Number of days in theaters
     in.release <- x %>% read_html() %>% html_node("table~ table+ table td+ td") %>% html_text(trim = TRUE)
 
     if (is.na(in.release)) {
@@ -100,18 +124,17 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
       in.release <- x %>% read_html() %>% html_node("table:nth-child(4) td+ td") %>% html_text(trim = TRUE)
     }
 
-    if (str_detect(in.release, "days|day") == FALSE) {
+    if (str_detect(in.release, "days|day" | is.na(in.release)) == FALSE) {
       in.release <- x %>% read_html() %>% html_node(".mp_box_content table:nth-child(5) td+ td") %>% html_text(trim = TRUE)
     }
 
-    if (str_detect(in.release, "days|day") == FALSE) {
+    if (str_detect(in.release, "days|day" | is.na(in.release)) == FALSE) {
       in.release <- x %>% read_html() %>% html_node(".mp_box_content table:nth-child(6) td+ td") %>% html_text(trim = TRUE)
     }
 
-    if (str_detect(in.release, "days|day") == FALSE) {
+    if (str_detect(in.release, "days|day" | is.na(in.release)) == FALSE) {
       in.release <- NA
     }
-
 
     try(in.release <- str_split(in.release, "/", n = 2, simplify = TRUE)[1])
     in.release <- str_remove_all(in.release, "days")
@@ -119,10 +142,13 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
 
     try(in.release <- str_split(in.release, "days", n = 2, simplify = TRUE)[1])
     try(in.release <- as.numeric(in.release))
+    ####
 
+
+    ## Distributor
     distributor <- x %>% read_html() %>% html_node("b > a") %>% html_text(trim = TRUE)
 
-
+    ## Release date
     release.date <- x %>% read_html() %>% html_node("nobr a") %>% html_text(trim = TRUE)   ## Scrap release date and format to Date class variable
     dates <- str_split(release.date, " |,", n = 3, simplify = TRUE)
     try(day <- dates[,2])
@@ -132,25 +158,38 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
     try(release.date <- as.Date(release.date))
     #####
 
+    ## Rating
     rating <- x %>% read_html() %>% html_node("center tr:nth-child(4) td:nth-child(1) b") %>% html_text(trim = TRUE)
 
+    ## Budget
     budget <- x %>% read_html() %>% html_node("center tr:nth-child(4) td+ td b") %>% html_text(trim = TRUE)
-    budget <- str_remove_all(budget, "\\$")
-    try(budget <- str_replace(budget, " million| Million", "000000"))
-    try(budget <- as.numeric(budget))
 
+    if (budget == "N/A") {
+      budget <- NA
+    } else if (budget != "N/A") {
+      budget <- str_remove_all(budget, "\\$")
+      try(budget <- str_replace(budget, " million| Million", "000000"))
+      try(budget <- as.numeric(budget))
+    }
+
+    ## Runtime
     try(runtime <- x %>% read_html() %>% html_node("center tr:nth-child(3) td+ td b") %>% html_text(trim = TRUE))
     runtime <- str_remove_all(runtime, "hrs\\.|min\\.")
     try(runtime <- str_replace(runtime, "  ", ":"))
     try(runtime <- as.difftime(runtime, "%H:%M", units = "mins"))
     try(runtime <- as.numeric(runtime))
 
+    ## Genre
     genre <- x %>% read_html() %>% html_nodes("center tr:nth-child(3) td:nth-child(1) b") %>% html_text(trim = TRUE)
 
+    ## Film id
     id <- str_remove_all(url, "http://www.boxofficemojo.com/movies/\\?page=main&id=|\\.htm")  ## Creates the id
 
+    ## Scrap date
     scrap.date <- Sys.Date()
 
+
+    ## Creates data frame, prints it and writes line in csv
     try(line <- data_frame(id, title, genre, distributor, budget, domestic.gross, foreign.gross, total.gross, first.weekend, widest.release, in.release, release.date, rating, runtime, scrap.date, url))
     print(line)
     try(write_csv(line, append = TRUE, col_names = FALSE, path = ruta))
