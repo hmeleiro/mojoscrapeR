@@ -54,7 +54,9 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
     foreign.gross <- x %>% read_html() %>% html_node("td td td td:nth-child(1) tr:nth-child(2) td:nth-child(2)") %>% html_text(trim = TRUE)
     foreign.gross <- str_remove_all(foreign.gross, "\\$|,")
 
-    if (foreign.gross == "n/a") {
+    if (is.na(foreign.gross)) {
+      foreign.gross <- NA
+    } else if (foreign.gross == "n/a") {
       foreign.gross <- NA
     }
 
