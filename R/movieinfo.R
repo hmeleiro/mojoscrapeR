@@ -39,7 +39,7 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
 
   urls <- unique(urls)
 
-  line <- data_frame("id", "title", "distributor", "genre", "budget", "domestic.gross", "foreign.gross", "total.gross", "first.weekend", "widest.release", "in.release", "release.date", "rating", "runtime", "scrap.date", "url")
+  line <- data_frame("id", "title", "genre", "distributor", "budget", "domestic.gross", "foreign.gross", "total.gross", "first.weekend", "widest.release", "in.release", "release.date", "rating", "runtime", "scrap.date", "url")
   write_csv(line, append = FALSE, col_names = FALSE, path = ruta)
 
   for (url in urls) {
@@ -106,7 +106,7 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
       widest.release <- NA
     }
 
-    if (str_detect(widest.release, "theaters") == FALSE) {
+    if (str_detect(widest.release, "theaters") == FALSE | is.na(widest.release)) {
       widest.release <- x %>% read_html() %>% html_node("table:nth-child(4) td+ td") %>% html_text(trim = TRUE)
     }
 
