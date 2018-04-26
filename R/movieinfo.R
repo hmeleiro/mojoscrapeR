@@ -124,15 +124,15 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
       in.release <- x %>% read_html() %>% html_node("table:nth-child(4) td+ td") %>% html_text(trim = TRUE)
     }
 
-    if (str_detect(in.release, "days|day" | is.na(in.release)) == FALSE) {
+    if (str_detect(in.release, "days|day") == FALSE | is.na(in.release)) {
       in.release <- x %>% read_html() %>% html_node(".mp_box_content table:nth-child(5) td+ td") %>% html_text(trim = TRUE)
     }
 
-    if (str_detect(in.release, "days|day" | is.na(in.release)) == FALSE) {
+    if (str_detect(in.release, "days|day") == FALSE | is.na(in.release)) {
       in.release <- x %>% read_html() %>% html_node(".mp_box_content table:nth-child(6) td+ td") %>% html_text(trim = TRUE)
     }
 
-    if (str_detect(in.release, "days|day" | is.na(in.release)) == FALSE) {
+    if (str_detect(in.release, "days|day") == FALSE | is.na(in.release)) {
       in.release <- NA
     }
 
