@@ -18,6 +18,8 @@
 #' @export
 domesticRank <- function(pages, ruta = "~/Domestic_rank.csv") {
 
+  start <- Sys.time()
+
   desktop_agents <-  c('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
                        'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
                        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
@@ -36,7 +38,7 @@ domesticRank <- function(pages, ruta = "~/Domestic_rank.csv") {
 
 
   line <- data_frame("rank", "title", "year", "lifetime.gross", "link", "id", "multiple.releases")
-  write_csv(line, append = FALSE, col_names = FALSE, path = "~/domestic_ranking.csv")
+  write_csv(line, append = FALSE, col_names = FALSE, path = ruta)
 
   for (url in urls) {
     x <- GET(url, add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
@@ -67,8 +69,12 @@ domesticRank <- function(pages, ruta = "~/Domestic_rank.csv") {
     try(line$year <- str_remove(line$year, "\\^"))
 
     print(line)
-    try(write_csv(line, append = TRUE, col_names = FALSE, path = "~/domestic_ranking.csv"))
+    try(write_csv(line, append = TRUE, col_names = FALSE, path = ruta))
 
     Sys.sleep(sample(1:2, 1))
   }
+
+  stop <- Sys.time()
+  print(difftime(stop, start,units = "auto"))
+
 }

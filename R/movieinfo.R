@@ -18,7 +18,6 @@
 #'
 #' @export
 movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
-
   start <- Sys.time()
 
   urls <- paste0("http://www.boxofficemojo.com/movies/?page=main&id=", movies, ".htm")
@@ -38,8 +37,10 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
 
   urls <- unique(urls)
 
-  line <- data_frame("id", "title", "genre", "distributor", "budget", "domestic.gross", "foreign.gross", "total.gross", "first.weekend", "widest.release", "in.release", "release.date", "rating", "runtime", "scrap.date", "url")
+  line <- data_frame("id", "title", "genre", "distributor", "budget", "domestic.gross", "foreign.gross", "total.gross", "first.weekend", "first.weekend.wide", "unique.release", "widest.release", "in.release", "release.date", "rating", "runtime", "scrap.date", "url")
   write_csv(line, append = FALSE, col_names = FALSE, path = ruta)
+
+
 
   for (url in urls) {
     x <- GET(url, add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
@@ -80,13 +81,17 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
 
     ## First weekend
     first.weekend <- x %>% read_html() %>% html_node("td td td td .mp_box+ .mp_box table:nth-child(1) tr:nth-child(1) td+ td") %>% html_text(trim = TRUE)
+    first.weekend.wide <- NA
+
 
     if (first.weekend == "n/a" | is.na(first.weekend)) {
       first.weekend <- NA
     }
 
+    ## detection of films with two releases
     if (str_detect(first.weekend, "limited") == TRUE | is.na(first.weekend)) {
       first.weekend <- x %>% read_html() %>% html_node("td td td td .mp_box+ .mp_box table:nth-child(2) tr:nth-child(1) td+ td") %>% html_text(trim = TRUE)
+      first.weekend.wide <- x %>% read_html() %>% html_node("table:nth-child(3) tr:nth-child(1) td+ td") %>% html_text(trim = TRUE)
     }
 
     if (str_detect(first.weekend, "\\$") == FALSE | is.na(first.weekend)) {
@@ -94,8 +99,24 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
     }
 
     first.weekend <- str_remove_all(first.weekend, "\\$|,")
+    first.weekend.wide <- str_remove_all(first.weekend.wide, "\\$|,")
+
     try(first.weekend <- as.numeric(first.weekend))
+    try(first.weekend.wide <- as.numeric(first.weekend.wide))
+
+    if (is.na(first.weekend.wide)) {
+      first.weekend.wide <- first.weekend
+    }
+
+    if (first.weekend != first.weekend.wide | is.na(first.weekend.wide) | is.na(first.weekend)) {
+      unique.release <- FALSE
+    } else {
+      unique.release <- TRUE
+    }
     ###
+
+
+
 
 
     ## Number of theater in widest release
@@ -194,14 +215,13 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
 
 
     ## Creates data frame, prints it and writes line in csv
-    try(line <- data_frame(id, title, genre, distributor, budget, domestic.gross, foreign.gross, total.gross, first.weekend, widest.release, in.release, release.date, rating, runtime, scrap.date, url))
+    try(line <- data_frame(id, title, genre, distributor, budget, domestic.gross, foreign.gross, total.gross, first.weekend, first.weekend.wide, unique.release, widest.release, in.release, release.date, rating, runtime, scrap.date, url))
     print(line)
     try(write_csv(line, append = TRUE, col_names = FALSE, path = ruta))
 
-    Sys.sleep(sample(1:3, 1))
+    Sys.sleep(sample(1:2, 1))
   }
 
   stop <- Sys.time()
   print(difftime(stop, start, units = "auto"))
-
 }

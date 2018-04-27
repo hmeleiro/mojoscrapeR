@@ -82,6 +82,7 @@ mojo <- function(from , to, ruta = "~/mojo.csv") {
     print(line)
     write_csv(line, append = TRUE, col_names = FALSE, path = ruta)
 
+    Sys.sleep(sample(1:2, 1))
   }
 
   stop <- Sys.time()
