@@ -61,13 +61,13 @@ domesticRank <- function(pages, ruta = "~/Domestic_rank.csv") {
 
     multiple.releases <- FALSE
 
-    line <- data_frame(rank, title, year, lifetime.gross, link, id, multiple.releases)
+    try(line <- data_frame(rank, title, year, lifetime.gross, link, id, multiple.releases))
 
-    line$multiple.releases[str_detect(line$year, "\\^") == TRUE] <- TRUE
-    line$year <- str_remove(line$year, "\\^")
+    try(line$multiple.releases[str_detect(line$year, "\\^") == TRUE] <- TRUE)
+    try(line$year <- str_remove(line$year, "\\^"))
 
     print(line)
-    write_csv(line, append = TRUE, col_names = FALSE, path = "~/domestic_ranking.csv")
+    try(write_csv(line, append = TRUE, col_names = FALSE, path = "~/domestic_ranking.csv"))
 
     Sys.sleep(sample(1:2, 1))
   }
