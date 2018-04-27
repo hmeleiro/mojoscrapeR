@@ -17,5 +17,5 @@ mojo(from, to, ruta = "~/mojo.csv")
 It returns a csv in the specified path
 }
 \description{
-This function scraps mojoboxoffice.com and downloads box office data of each day in a given interval.
+This function scraps boxofficemojo.com and downloads box office data of each day in a given interval.
 }

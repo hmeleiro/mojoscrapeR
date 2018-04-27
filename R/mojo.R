@@ -1,6 +1,6 @@
 #' Scraps mojoboxoffice.com for revenue data
 #'
-#' This function scraps mojoboxoffice.com and downloads box office data of each day in a given interval.
+#' This function scraps boxofficemojo.com and downloads box office data of each day in a given interval.
 #'
 #'
 #' @param from character. A date in YYYY-MM-DD format.
@@ -15,7 +15,6 @@
 #' @importFrom readr read_csv
 #' @import utils
 #' @import dplyr
-#' @importFrom dplyr data_frame
 #' @import xml2
 #'
 #' @export

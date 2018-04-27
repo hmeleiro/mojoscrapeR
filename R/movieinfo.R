@@ -1,9 +1,9 @@
 #' Scraps mojoboxoffice.com for revenue data
 #'
-#' This function scraps mojoboxoffice.com and downloads box office data and other info on a series of movies.
+#' This function scraps boxofficemojo.com and downloads box office data and other info on a series of movies.
 #'
 #'
-#' @param movies character. A string of mojo box office movie ids. You can get them from the id column of a csv extract of mojo() function.
+#' @param movies character. A string of box office mojo movie ids. You can get them from the id column of a csv extract of mojo() function.
 #' @param ruta character. A valid path in your computer where you want to create the csv file. By default the csv named movieinfo will be created in the working directory.
 #' @return It returns a csv in the specified path
 #'
@@ -11,7 +11,6 @@
 #' @import rvest
 #' @import httr
 #' @import dplyr
-#' @importFrom dplyr data_frame
 #' @importFrom  readr write_csv
 #' @importFrom readr read_csv
 #' @import utils
