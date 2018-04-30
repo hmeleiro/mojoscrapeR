@@ -197,6 +197,7 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
       try(budget <- as.numeric(budget))
     }
 
+
     ## Runtime
     try(runtime <- x %>% read_html() %>% html_node("center tr:nth-child(3) td+ td b") %>% html_text(trim = TRUE))
     runtime <- str_remove_all(runtime, "hrs\\.|min\\.")

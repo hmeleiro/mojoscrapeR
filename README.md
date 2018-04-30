@@ -1,6 +1,6 @@
 # mojoscrapeR
 
-MojoscrapeR is a web scraper for mojoboxoffice.com. It easily downloads revenue data on films.
+MojoscrapeR is a web scraper for [mojoboxoffice.com](http://www.boxofficemojo.com/). It easily downloads revenue data on films.
 
 
 # Instalation
@@ -9,7 +9,7 @@ Type ```devtools::install_github("meneos/mojoscrapeR")```in your R console.
 
 # How to use mojoscrapeR
 
-At the moment mojoscrapeR is composed of two functions: one to scrap box office data of each day given a time interval and another to extract information from a set of movies.
+At the moment mojoscrapeR is composed of three functions: one to scrap box office data of each day given a time interval, another one to extract information from a set of movies given a string of film ids, and a third one to scrap the domestic ranking of [homeboxmojo.com](http://www.boxofficemojo.com/alltime/domestic.htm).
 
 ## mojo()
 
@@ -20,7 +20,7 @@ Given a time interval ```mojo()``` function will scrap daily box office data. Th
 
 ## movieinfo() 
 
-Given a string of movie ids ```movieinfo()```will scrap info for each film. The simplest way of getting a set of movie ids is using the id column of the csv resultant of mojo() function. The ruta argument is used to specify a path in your computer where you want to create the csv file.
+Given a string of movie ids ```movieinfo()```will scrap info for each film. The simplest way of getting a set of movie ids is using the id column of the csv resultant of mojo() or domesticRank() functions. The ruta argument is used to specify a path in your computer where you want to create the csv file.
 
 ##### For example:
 
@@ -40,4 +40,15 @@ data <- read.csv(".../mojo.csv")
 
 #scrap scrap
 movieinfo(data$id)
+```
+
+## domesticRank()
+
+With this function you can create a summary csv of the [domestic ranking](http://www.boxofficemojo.com/alltime/domestic.htm). The only mandatory argument of the function is the number of pages you want to scrap. The ruta argument is used to specify a path in your computer where you want to create the csv file.
+
+##### For example:
+
+```
+# This will scrap the first ten pages of the domestic ranking (1.000 titles)
+domesticRank(10)
 ```
