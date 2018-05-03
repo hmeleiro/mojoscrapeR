@@ -17,11 +17,15 @@
 #' @import xml2
 #'
 #' @export
-movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
+movieinfo <- function(movies, cpi = NA, ruta = "~/movieinfo.csv") {
   start <- Sys.time()
 
-  urls <- paste0("http://www.boxofficemojo.com/movies/?page=main&id=", movies, ".htm")
 
+  if (!is.na(cpi)) {
+    urls <- paste0("http://www.boxofficemojo.com/movies/?page=main&id=", movies, ".htm", "&adjust_yr=", cpi,"&p=.htm")
+  } else if (is.na(cpi)) {
+    urls <- paste0("http://www.boxofficemojo.com/movies/?page=main&id=", movies, ".htm")
+  }
 
 
   desktop_agents <-  c('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
@@ -37,11 +41,18 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
 
   urls <- unique(urls)
 
-  line <- data_frame("id", "title", "genre", "distributor", "budget", "domestic.gross", "foreign.gross", "total.gross", "first.weekend", "first.weekend.wide", "unique.release", "widest.release", "in.release", "release.date", "rating", "runtime", "scrap.date", "url")
+
+  if (cpi == 1) {
+    line <- data_frame("id", "title", "genre", "distributor", "budget", "domestic.gross", "foreign.gross", "total.gross", "est.tickets", "est.tickets.life", "first.weekend", "first.weekend.wide", "unique.release", "widest.release", "in.release", "release.date", "rating", "runtime", "cpi", "scrap.date", "url")
+  } else {
+    line <- data_frame("id", "title", "genre", "distributor", "budget", "domestic.gross", "foreign.gross", "total.gross", "first.weekend", "first.weekend.wide", "unique.release", "widest.release", "in.release", "release.date", "rating", "runtime", "cpi", "scrap.date", "url")
+  }
+
+
   write_csv(line, append = FALSE, col_names = FALSE, path = ruta)
 
 
-
+  n <- 1
   for (url in urls) {
     x <- GET(url, add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
 
@@ -77,6 +88,20 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
 
     try(total.gross <- as.numeric(total.gross))
     ####
+
+    ### Estimated tickets sold if cpi is 1
+    if (cpi == 1) {
+      est.tickets <- x %>% read_html() %>% html_node("center font > b") %>% html_text(trim = TRUE)
+      est.tickets <- str_remove_all(est.tickets, ",")
+      est.tickets.life <- x %>% read_html() %>% html_node("center a") %>% html_text(trim = TRUE)
+
+      if (str_detect(est.tickets.life, "Lifetime") == FALSE) {
+        est.tickets.life <- NA
+      } else {
+        est.tickets.life <- str_remove_all(est.tickets.life, ",|Domestic Lifetime Est. Tickets: |Domestic Lifetime Est. Tickets:")
+      }
+    }
+
 
 
     ## First weekend
@@ -209,18 +234,27 @@ movieinfo <- function(movies, ruta = "~/movieinfo.csv") {
     genre <- x %>% read_html() %>% html_nodes("center tr:nth-child(3) td:nth-child(1) b") %>% html_text(trim = TRUE)
 
     ## Film id
-    id <- str_remove_all(url, "http://www.boxofficemojo.com/movies/\\?page=main&id=|\\.htm")  ## Creates the id
+    #id <- str_remove_all(url, "http://www.boxofficemojo.com/movies/\\?page=main&id=|\\.htm")  ## Creates the id
+    id <- movies[n]
 
     ## Scrap date
     scrap.date <- Sys.Date()
 
 
     ## Creates data frame, prints it and writes line in csv
-    try(line <- data_frame(id, title, genre, distributor, budget, domestic.gross, foreign.gross, total.gross, first.weekend, first.weekend.wide, unique.release, widest.release, in.release, release.date, rating, runtime, scrap.date, url))
+
+
+    if (cpi == 1) {
+      try(line <- data_frame(id, title, genre, distributor, budget, domestic.gross, foreign.gross, total.gross, est.tickets, est.tickets.life, first.weekend, first.weekend.wide, unique.release, widest.release, in.release, release.date, rating, runtime, cpi, scrap.date, url))
+    } else {
+      try(line <- data_frame(id, title, genre, distributor, budget, domestic.gross, foreign.gross, total.gross, first.weekend, first.weekend.wide, unique.release, widest.release, in.release, release.date, rating, runtime, cpi, scrap.date, url))
+    }
+
     print(line)
     try(write_csv(line, append = TRUE, col_names = FALSE, path = ruta))
 
     Sys.sleep(sample(1:2, 1))
+    n <- n + 1
   }
 
   stop <- Sys.time()

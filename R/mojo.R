@@ -18,7 +18,7 @@
 #' @import xml2
 #'
 #' @export
-mojo <- function(from , to, ruta = "~/mojo.csv") {
+mojo <- function(from, to, cpi = NA, ruta = "~/mojo.csv") {
 
   start <- Sys.time()
 
@@ -28,9 +28,19 @@ mojo <- function(from , to, ruta = "~/mojo.csv") {
 
   days <- seq.Date(from, to, 1)  # Genero las fechas del intervalo.
 
-  urls <- paste0("http://www.boxofficemojo.com/daily/chart/?view=1day&sortdate=", days, "&p=.htm")
+  if (!is.na(cpi)) {
+    urls <- paste0("http://www.boxofficemojo.com/daily/chart/?view=1day&sortdate=", days, "&adjust_yr=", cpi,"&p=.htm")
+  } else if (is.na(cpi)) {
+    urls <- paste0("http://www.boxofficemojo.com/daily/chart/?view=1day&sortdate=", days, "&p=.htm")
+  }
 
-  line <- data_frame("id", "movie", "studio", "days.in.theatres", "daily.gross", "gross.to.date", "theatres", "date", "url")
+
+  if (cpi == 1) {
+    line <- data_frame("id", "movie", "studio", "days.in.theatres", "daily.tickets", "tickets.to.date", "theatres", "cpi", "date", "url")
+  } else {
+    line <- data_frame("id", "movie", "studio", "days.in.theatres", "daily.gross", "gross.to.date", "theatres", "cpi", "date", "url")
+  }
+
   write_csv(line, append = FALSE, col_names = FALSE, path = ruta)
 
 
@@ -78,7 +88,7 @@ mojo <- function(from , to, ruta = "~/mojo.csv") {
 
     id <- str_remove_all(links, "http://www.boxofficemojo.com/movies/\\?page=daily&id=|\\.htm")
 
-    line <- data_frame(id, titles, studio, days, dailygross, gross.to.date, theatres, date, links)
+    line <- data_frame(id, titles, studio, days, dailygross, gross.to.date, theatres, cpi, date, links)
     print(line)
     write_csv(line, append = TRUE, col_names = FALSE, path = ruta)
 
