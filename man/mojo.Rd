@@ -4,12 +4,14 @@
 \alias{mojo}
 \title{Scraps mojoboxoffice.com for revenue data}
 \usage{
-mojo(from, to, ruta = "~/mojo.csv")
+mojo(from, to, cpi = NA, ruta = "~/mojo.csv")
 }
 \arguments{
 \item{from}{character. A date in YYYY-MM-DD format.}
 
 \item{to}{character. A date in YYYY-MM-DD format.}
+
+\item{cpi}{numeric. A year to adjust the inflation of the revenue data. If 1 is selected it will retrieve the estimated number of tickets instead of gross data.}
 
 \item{ruta}{character. A valid path in your computer where you want to create the csv file. By default the csv named mojo will be created in the working directory.}
 }

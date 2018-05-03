@@ -4,6 +4,7 @@
 #'
 #'
 #' @param movies character. A string of box office mojo movie ids. You can get them from the id column of a csv extract of mojo() function.
+#' @param cpi numeric. A year to adjust the inflation of the revenue data. If 1 is selected it will retrieve the estimated number of tickets as well.
 #' @param ruta character. A valid path in your computer where you want to create the csv file. By default the csv named movieinfo will be created in the working directory.
 #' @return It returns a csv in the specified path
 #'

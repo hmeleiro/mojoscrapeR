@@ -9,18 +9,18 @@ Type ```devtools::install_github("meneos/mojoscrapeR")```in your R console.
 
 # How to use mojoscrapeR
 
-At the moment mojoscrapeR is composed of three functions: one to scrap box office data of each day given a time interval, another one to extract information from a set of movies given a string of film ids, and a third one to scrap the domestic ranking of [homeboxmojo.com](http://www.boxofficemojo.com/alltime/domestic.htm).
+At the moment mojoscrapeR is composed of three functions: one to scrap box office data of each day given a time interval, another one to extract information from a set of movies given a string of film ids, and a third one to scrap the domestic ranking of [homeboxmojo.com](http://www.boxofficemojo.com/alltime/domestic.htm). Use the cpi argument to retrieve inflation adjusted revenue data. Set the cpi argument to the base year you want to adjust.
 
 ## mojo()
 
-Given a time interval ```mojo()``` function will scrap daily box office data. The ruta argument is used to specify a path in your computer where you want to create the csv file.
+Given a time interval ```mojo()``` function will scrap daily box office data. Use the cpi argument to retrieve inflation adjusted revenue data. Set the cpi argument to the base year you want to adjust. Set the cpi argument to the base year you want to adjust (if 1 is selected it will retrieve the estimated number of tickets sold). The ruta argument is used to specify a path in your computer where you want to create the csv file.
 
 ##### For example: 
-```mojo(from = "2018-01-31", to = "2018-31-01")``` 
+```mojo(from = "2018-01-31", to = "2018-31-01", cpi = 2018)``` 
 
 ## movieinfo() 
 
-Given a string of movie ids ```movieinfo()```will scrap info for each film. The simplest way of getting a set of movie ids is using the id column of the csv resultant of mojo() or domesticRank() functions. The ruta argument is used to specify a path in your computer where you want to create the csv file.
+Given a string of movie ids ```movieinfo()```will scrap info for each film. The simplest way of getting a set of movie ids is using the id column of the csv resultant of mojo() or domesticRank() functions. Use the cpi argument to retrieve inflation adjusted revenue data. Set the cpi argument to the base year you want to adjust (if 1 is selected it will retrieve the estimated number of tickets sold). The ruta argument is used to specify a path in your computer where you want to create the csv file.
 
 ##### For example:
 
@@ -40,6 +40,10 @@ data <- read.csv(".../mojo.csv")
 
 #scrap scrap
 movieinfo(data$id)
+
+# or with cpi adjusted
+movieinfo(data$id, cpi = 2018)
+
 ```
 
 ## domesticRank()

@@ -4,10 +4,12 @@
 \alias{movieinfo}
 \title{Scraps mojoboxoffice.com for revenue data}
 \usage{
-movieinfo(movies, ruta = "~/movieinfo.csv")
+movieinfo(movies, cpi = NA, ruta = "~/movieinfo.csv")
 }
 \arguments{
 \item{movies}{character. A string of box office mojo movie ids. You can get them from the id column of a csv extract of mojo() function.}
+
+\item{cpi}{numeric. A year to adjust the inflation of the revenue data. If 1 is selected it will retrieve the estimated number of tickets as well.}
 
 \item{ruta}{character. A valid path in your computer where you want to create the csv file. By default the csv named movieinfo will be created in the working directory.}
 }
