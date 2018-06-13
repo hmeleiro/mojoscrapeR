@@ -3,7 +3,7 @@
 #' This function scraps boxofficemojo.com and downloads rank, lifetime gross box office data, year, and id from the domestic ranking: 'http://www.boxofficemojo.com/alltime/domestic.htm'.
 #'
 #' @param pages numeric. Number of pages you want to scrap from box office mojo's domestic ranking.
-#' @param ruta character. A valid path in your computer where you want to create the csv file. By default the csv named mojo will be created in the working directory.
+#' @param ruta character. A valid path in your computer where you want to create the csv file. By default the csv named Domestic_rank will be created in the working directory.
 #' @return It returns a csv in the specified path
 #'
 #' @import stringr
@@ -38,7 +38,7 @@ domesticRank <- function(pages, ruta = "~/Domestic_rank.csv") {
 
 
   line <- data_frame("rank", "title", "year", "lifetime.gross", "link", "id", "multiple.releases")
-  write_csv(line, append = FALSE, col_names = FALSE, path = ruta)
+  readr::write_csv(line, append = FALSE, col_names = FALSE, path = ruta)
 
   for (url in urls) {
     x <- GET(url, add_headers('user-agent' = desktop_agents[sample(1:10, 1)]))
@@ -69,12 +69,15 @@ domesticRank <- function(pages, ruta = "~/Domestic_rank.csv") {
     try(line$year <- str_remove(line$year, "\\^"))
 
     print(line)
-    try(write_csv(line, append = TRUE, col_names = FALSE, path = ruta))
+    try(readr::write_csv(line, append = TRUE, col_names = FALSE, path = ruta))
 
     Sys.sleep(sample(1:2, 1))
   }
 
   stop <- Sys.time()
   print(difftime(stop, start,units = "auto"))
+
+  domesticRank <- readr::read_csv(ruta)
+  domesticRank <<- mojo
 
 }

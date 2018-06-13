@@ -3,6 +3,7 @@
 export(domesticRank)
 export(mojo)
 export(movieinfo)
+import(RSelenium)
 import(dplyr)
 import(httr)
 import(rvest)

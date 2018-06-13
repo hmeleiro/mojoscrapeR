@@ -15,5 +15,6 @@ Imports:
   readr,
   rvest,
   stringr,
-  xml2
+  xml2,
+  RSelenium
   

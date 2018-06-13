@@ -9,7 +9,7 @@ domesticRank(pages, ruta = "~/Domestic_rank.csv")
 \arguments{
 \item{pages}{numeric. Number of pages you want to scrap from box office mojo's domestic ranking.}
 
-\item{ruta}{character. A valid path in your computer where you want to create the csv file. By default the csv named mojo will be created in the working directory.}
+\item{ruta}{character. A valid path in your computer where you want to create the csv file. By default the csv named Domestic_rank will be created in the working directory.}
 }
 \value{
 It returns a csv in the specified path
